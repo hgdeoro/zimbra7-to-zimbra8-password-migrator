@@ -36,3 +36,6 @@ On Zimbra 8 host, execute:
         -H $ldap_master_url \
         -D $zimbra_ldap_userdn \
         -w $zimbra_ldap_password -c -f /dev/shm/dump-zimbra-8.ldif
+
+After execution, remember to delete the ldif files on both servers!
+
