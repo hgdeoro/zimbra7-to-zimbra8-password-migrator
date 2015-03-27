@@ -49,7 +49,7 @@ On Zimbra 8 host, execute:
 
 """
 
-SPLITTER = re.compile(r':+')
+SPLITTER = re.compile(r'\s*:+\s*')
 
 
 def generate_dict(current_object_lines):
