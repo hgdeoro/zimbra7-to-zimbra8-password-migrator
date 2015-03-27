@@ -10,11 +10,15 @@ Based on:
 - http://www.math.ucla.edu/~jimc/documents/pimstuff/zimbra.txt
 
 
-On Zimbra 7 host, execute:
+# On Zimbra 7 host:
+
+### Load Zimbra settings / environment variables
 
     root@zimbra7~$ sudo -u zimbra -i
     zimbra@zimbra7~$ source ~/bin/zmshutil
     zimbra@zimbra7~$ zmsetvars
+
+### Dump account & password hashes:
 
     zimbra@zimbra7~$ ldapsearch -o ldif-wrap=no -x -H $ldap_master_url \
         -D $zimbra_ldap_userdn -w $zimbra_ldap_password -LLL \
@@ -22,20 +26,29 @@ On Zimbra 7 host, execute:
         dn displayName zimbraMailStatus zimbraMailDeliveryAddress \
         mail userPassword > /dev/shm/dump-zimbra-7.ldif
 
+### Generate the LDIF file:
+
     zimbra@zimbra7~$ python generate_ldap_diff.py /dev/shm/dump-zimbra-7.ldif > /dev/shm/dump-zimbra-8.ldif 
+
+### Copy the LDIF file to the Zimbra 8 server:
 
     zimbra@zimbra7~$ scp /dev/shm/dump-zimbra-8.ldif user@zimbra8:/dev/shm
 
-On Zimbra 8 host, execute:
+# On Zimbra 8 host, execute:
+
+### Load Zimbra settings / environment variables
 
     root@zimbra8~$ sudo -u zimbra -i
     zimbra@zimbra8~$ source ~/bin/zmshutil
     zimbra@zimbra8~$ zmsetvars
+
+### Update the passwords:
 
     zimbra@zimbra8~$ ldapmodify -v -x \
         -H $ldap_master_url \
         -D $zimbra_ldap_userdn \
         -w $zimbra_ldap_password -c -f /dev/shm/dump-zimbra-8.ldif
 
-After execution, remember to delete the ldif files on both servers!
+# Cleanup
 
+After execution, remember to delete the ldif files on both servers!
