@@ -3,6 +3,7 @@
 from __future__ import unicode_literals
 
 import fileinput
+import re
 
 
 """
@@ -30,9 +31,12 @@ On Zimbra 7 host, execute:
 
 """
 
+SPLITTER = re.compile(r':+')
+
 
 def generate_dict(current_object_lines):
-    return {}
+    splitted = [SPLITTER.split(line) for line in current_object_lines]
+    return dict(splitted)
 
 
 def generate_dict_objects_from_files():
@@ -42,7 +46,9 @@ def generate_dict_objects_from_files():
     # Iterate all the lines
     for line in fileinput.input():
         line = line.strip()
-        if not line:
+        if line:
+            current_object_lines.append(line)
+        else:
             a_dict_object = generate_dict(current_object_lines)
             dict_objects.append(a_dict_object)
             current_object_lines = []
@@ -59,6 +65,8 @@ def generate_dict_objects_from_files():
 def main():
     dict_objects = generate_dict_objects_from_files()
     print "{} object found".format(len(dict_objects))
+    import pprint
+    pprint.pprint(dict_objects)
 
 
 if __name__ == '__main__':
