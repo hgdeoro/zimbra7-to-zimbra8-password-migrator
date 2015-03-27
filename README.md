@@ -30,6 +30,10 @@ Based on:
 
     zimbra@zimbra7~$ python generate_ldap_diff.py /dev/shm/dump-zimbra-7.ldif > /dev/shm/dump-zimbra-8.ldif 
 
+### Review errors (reported as comments at the end of the file):
+
+    zimbra@zimbra7~$ tail /dev/shm/dump-zimbra-8.ldif
+
 ### Copy the LDIF file to the Zimbra 8 server:
 
     zimbra@zimbra7~$ scp /dev/shm/dump-zimbra-8.ldif user@zimbra8:/dev/shm
@@ -48,6 +52,8 @@ Based on:
         -H $ldap_master_url \
         -D $zimbra_ldap_userdn \
         -w $zimbra_ldap_password -c -f /dev/shm/dump-zimbra-8.ldif
+
+Since we are using '-c', `ldapmodify` will continue in case of errors...
 
 # Cleanup
 
