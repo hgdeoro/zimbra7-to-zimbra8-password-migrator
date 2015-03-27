@@ -88,9 +88,10 @@ def generate_ldif(dict_objects):
             erroneous_obj.append(obj)
             continue
 
-        user_password = base64.b64decode(obj['userPassword'])
+        dn = obj['dn'].strip()
+        user_password = base64.b64decode(obj['userPassword'].strip())
 
-        print "# UPDATE {}".format(obj['dn'])
+        print "# UPDATE {}".format(dn)
         print "dn: {}".format(obj['dn'])
         print "changetype: modify"
         print "replace: userPassword"
@@ -106,7 +107,7 @@ def generate_ldif(dict_objects):
 
 def main():
     dict_objects = generate_dict_objects_from_files()
-    print "{} object found".format(len(dict_objects))
+    print "# {} object found".format(len(dict_objects))
     generate_ldif(dict_objects)
 
 
