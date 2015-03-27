@@ -29,7 +29,23 @@ On Zimbra 7 host, execute:
         -D $zimbra_ldap_userdn -w $zimbra_ldap_password -LLL \
         '(&(objectClass=zimbraAccount)(ou:dn:=people))' \
         dn displayName zimbraMailStatus zimbraMailDeliveryAddress \
-        mail userPassword > /dev/shm/dump.ldif
+        mail userPassword > /dev/shm/dump-zimbra-7.ldif
+
+    zimbra@zimbra7~$ python generate_ldap_diff.py /dev/shm/dump-zimbra-7.ldif > /dev/shm/dump-zimbra-8.ldif 
+
+    zimbra@zimbra7~$ scp /dev/shm/dump-zimbra-8.ldif user@zimbra8:/dev/shm
+
+On Zimbra 8 host, execute:
+
+    root@zimbra8~$ sudo -u zimbra -i
+    zimbra@zimbra8~$ source ~/bin/zmshutil
+    zimbra@zimbra8~$ zmsetvars
+
+    zimbra@zimbra8~$ ldapmodify -v -x \
+        -H $ldap_master_url \
+        -D $zimbra_ldap_userdn \
+        -w $zimbra_ldap_password -c -f /dev/shm/dump-zimbra-8.ldif
+
 
 """
 
