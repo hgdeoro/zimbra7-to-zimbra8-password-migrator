@@ -2,7 +2,9 @@
 
 from __future__ import unicode_literals
 
+import base64
 import fileinput
+import pprint
 import re
 
 
@@ -49,9 +51,10 @@ def generate_dict_objects_from_files():
         if line:
             current_object_lines.append(line)
         else:
-            a_dict_object = generate_dict(current_object_lines)
-            dict_objects.append(a_dict_object)
-            current_object_lines = []
+            if current_object_lines:
+                a_dict_object = generate_dict(current_object_lines)
+                dict_objects.append(a_dict_object)
+                current_object_lines = []
 
     # Process last lines
     if current_object_lines:
@@ -62,11 +65,33 @@ def generate_dict_objects_from_files():
     return dict_objects
 
 
+def generate_ldif(dict_objects):
+    erroneous_obj = []
+    for obj in dict_objects:
+        if 'userPassword' not in obj:
+            erroneous_obj.append(obj)
+            continue
+
+        user_password = base64.b64decode(obj['userPassword'])
+
+        print "# UPDATE {}".format(obj['dn'])
+        print "dn: {}".format(obj['dn'])
+        print "changetype: modify"
+        print "replace: userPassword"
+        print "userPassword: {}".format(user_password)
+        print "-"
+        print ""
+
+    for err_obj in erroneous_obj:
+        print "# ----- ERROR ----- The flowing object was ignored:"
+        for k, v in err_obj.iteritems():
+            print "#   {}: {}".format(k, v)
+
+
 def main():
     dict_objects = generate_dict_objects_from_files()
     print "{} object found".format(len(dict_objects))
-    import pprint
-    pprint.pprint(dict_objects)
+    generate_ldif(dict_objects)
 
 
 if __name__ == '__main__':
