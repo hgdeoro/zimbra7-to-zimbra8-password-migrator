@@ -1,5 +1,3 @@
-Simple script to migrate passwords from Zimbra 7 to Zimbra 8
-
 
 Based on:
 - http://wiki.zimbra.com/wiki/ShanxT-LDAP-CheatSheet
@@ -9,6 +7,7 @@ Based on:
 - https://wiki.zimbra.com/wiki/UNIX_and_Windows_Accounts_in_Zimbra_LDAP_and_Zimbra_Admin_UI
 - http://www.math.ucla.edu/~jimc/documents/pimstuff/zimbra.txt
 
+Note: the accounts need to be created on the target Zimbra 8 server.
 
 # On Zimbra 7 host:
 
