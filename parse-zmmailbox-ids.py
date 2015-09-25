@@ -56,8 +56,9 @@ def parse_zmmailbox_search_output():
 
 def main():
     status_count, status_more, ids = parse_zmmailbox_search_output()
-    if status_count > 0:
-        print ','.join(ids)
+    print ','.join(ids)
+    print status_more
+    print status_count
 
 
 if __name__ == '__main__':
