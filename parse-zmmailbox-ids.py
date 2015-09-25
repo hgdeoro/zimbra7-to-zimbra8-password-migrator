@@ -22,14 +22,16 @@ REGEX_HEAD_SEP = re.compile(r'^---')
 REGEX_DATA = re.compile(r'^(\d+)\.\s+(\-?\d+)\s+(\S+)')
 
 
-def main():
+def parse_zmmailbox_search_output():
+    ids = []
+
     lines = [line.strip() for line in sys.stdin.readlines() if line.strip()]
 
     status_count, status_more = REGEX_RESULT_STATUS.match(lines.pop(0)).groups()
     status_count = int(status_count)
 
     if status_count == 0:
-        return
+        return status_count, status_more, ids
 
     while True:
         line = lines.pop(0)
@@ -38,8 +40,6 @@ def main():
 
     line = lines.pop(0)
     assert REGEX_HEAD_SEP.search(line)
-
-    ids = []
 
     for line in lines:
         matched = REGEX_DATA.match(line)
@@ -51,7 +51,13 @@ def main():
 
     assert len(ids) == status_count
 
-    print ','.join(ids)
+    return status_count, status_more, ids
+
+
+def main():
+    status_count, status_more, ids = parse_zmmailbox_search_output()
+    if status_count > 0:
+        print ','.join(ids)
 
 
 if __name__ == '__main__':
