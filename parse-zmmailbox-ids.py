@@ -12,7 +12,7 @@ import sys
 REGEX_HEAD = re.compile(r'^Id')
 REGEX_HEAD_SEP = re.compile(r'^---')
 
-REGEX_DATA = re.compile(r'^(\d+)\.\s+\-?(\d+)\s+(\S+)')
+REGEX_DATA = re.compile(r'^(\d+)\.\s+(\-?\d+)\s+(\S+)')
 
 
 def main():
@@ -36,8 +36,8 @@ def main():
             sys.stderr.write("Couldn't parse line: {0}\n".format(line))
             sys.exit(1)
 
-    for an_id in ids:
-        print an_id
+    print ','.join(ids)
+
 
 if __name__ == '__main__':
     main()
